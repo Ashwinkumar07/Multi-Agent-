@@ -1,0 +1,14 @@
+torch
+torchvision
+timm
+faiss-cpu
+numpy
+opencv-python
+fastapi
+uvicorn
+python-multipart
+requests
+pandas
+scikit-learn
+matplotlib
+einops

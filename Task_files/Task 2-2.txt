@@ -1,0 +1,18 @@
+Task 2
+
+Data cleaning and feature engineering are essential steps in preparing a dataset for machine learning models. Using the Titanic dataset
+
+Step-by-Step Guide for Data Cleaning and Feature Engineering on Titanic Dataset
+
+Loading the Titanic Dataset: First, we need to load the dataset using pandas to explore the features and identify any missing or inconsistent data.
+
+Data Cleaning:
+
+Handle missing values.
+Remove duplicates.
+Correct inconsistent data types or formats.
+Feature Engineering:
+
+Create new features (e.g., extracting titles from names, creating age categories).
+Convert categorical features into numerical representations.
+Feature scaling or normalization.

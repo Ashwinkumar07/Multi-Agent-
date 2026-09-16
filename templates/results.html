@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Scan Results | Edufi AI/ML Portal{% endblock %}
+{% block header_title %}Threat Analysis Dashboard{% endblock %}
+
+{% block content %}
+<!-- Threat Level Banner -->
+<div class="alert-box danger mb-4 fade-up">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+    <line x1="12" y1="9" x2="12" y2="13"></line>
+    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+  </svg>
+  <div>
+    <div class="alert-title">Intrusion Assessment Completed</div>
+    <div class="alert-content">
+      Our ensemble detectors have completed the high-velocity packet flow diagnostics. Anomalous DDoS requests have been flagged, categorized, and isolated. Review the statistical maps and download the target list reports below.
+    </div>
+  </div>
+</div>
+
+<div class="grid-main-side">
+  <!-- Charts and Classification Summary -->
+  <div class="card ca-rose fade-up delay-1">
+    <h3 class="card-title" style="color: var(--rose);">Statistical Distribution Charts</h3>
+    <p class="text-muted mb-4" style="font-size: 0.85rem;">
+      Distribution breakdown representing anomaly classification percentages and exact threat counts.
+    </p>
+    
+    <div class="row">
+      <!-- Pie Chart -->
+      <div class="col-md-6 text-center mb-3 mb-md-0">
+        <h5 class="mb-3 font-weight-bold" style="font-size: 0.85rem;">Intrusion Ratio Breakdown</h5>
+        <div class="p-2 border rounded bg-light">
+          <img src="{{ url_for('static', filename=pie_chart) }}" alt="Prediction Pie Chart" class="img-fluid rounded" style="max-height: 240px;">
+        </div>
+      </div>
+      
+      <!-- Bar Chart -->
+      <div class="col-md-6 text-center">
+        <h5 class="mb-3 font-weight-bold" style="font-size: 0.85rem;">Packets Count Comparison</h5>
+        <div class="p-2 border rounded bg-light">
+          <img src="{{ url_for('download_file', filename=bar_chart) }}" alt="Bar Chart" class="img-fluid rounded" style="max-height: 240px;">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="pt-4 border-top mt-4">
+      <h5 class="mb-3 font-weight-bold" style="font-size: 0.9rem;">Download Segmented Threat Reports</h5>
+      <div class="row">
+        <div class="col-md-6 mb-2">
+          <a href="{{ url_for('download_file', filename=ddos_csv) }}" class="btn btn-rose btn-block btn-sm btn-shine">
+            Download DDoS Predictions CSV
+          </a>
+        </div>
+        <div class="col-md-6 mb-2">
+          <a href="{{ url_for('download_file', filename=benign_csv) }}" class="btn btn-teal btn-block btn-sm btn-shine">
+            Download BENIGN Predictions CSV
+          </a>
+        </div>
+      </div>
+      
+      <div class="text-center mt-3">
+        <a href="/anomaly_detection" class="btn btn-ghost btn-sm">
+          Analyze Another Log File
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Side panel -->
+  <div class="d-flex flex-column gap-3">
+    <!-- Accuracy report -->
+    <div class="card ca-violet fade-up delay-2">
+      <h4 class="card-title" style="color: var(--violet);">Ensemble Accuracy Report</h4>
+      
+      <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
+        <span class="text-muted" style="font-size: 0.8rem;">Overall Accuracy:</span>
+        <strong style="font-size: 0.88rem; color: var(--rose);">{{ accuracy }}</strong>
+      </div>
+      
+      <h5 class="mb-2" style="font-size: 0.8rem; font-weight: 700;">Precision-Recall Grid:</h5>
+      <pre style="font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; background-color: #0d1117; color: #e6edf3; padding: 12px; border-radius: var(--r-sm); border: 1px solid #21262d; overflow-x: auto; max-height: 260px; line-height: 1.55;">{{ report }}</pre>
+    </div>
+  </div>
+</div>
+{% endblock %}

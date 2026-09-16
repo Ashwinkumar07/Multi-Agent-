@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Sales &amp; Advertising Regression | Edufi AI/ML Portal{% endblock %}
+{% block header_title %}Simple Linear Regression Workspace{% endblock %}
+
+{% block content %}
+<div class="fade-up">
+  <div class="section-title">Sales Forecast Simulator</div>
+  <p class="section-sub">
+    Assess linear correlation between Sales revenue and Advertising budget using Ordinary Least Squares (OLS) regression.
+  </p>
+</div>
+
+<div class="grid-main-side">
+  <!-- Scatter Plot Card -->
+  <div class="card ca-sky fade-up delay-1">
+    <h3 class="card-title" style="color: var(--sky);">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.25rem;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Sales Scatter Plot &amp; Fit Line
+    </h3>
+    <p class="text-muted mb-4" style="font-size: 0.85rem;">
+      Drag the budget slider. The red dot represents the projected sales coordinates along the calculated regression line.
+    </p>
+
+    <!-- Scatter Plot Canvas -->
+    <div style="height: 380px; position: relative;" class="mb-4">
+      <canvas id="sales-reg-chart"></canvas>
+    </div>
+
+    <!-- Live controls -->
+    <div class="form-group pt-3 border-top">
+      <label for="adv-budget">Interactive Advertising Spend Budget</label>
+      <div class="range-slider">
+        <input type="range" class="range-input" id="adv-budget" min="10.0" max="150.0" step="1" value="80">
+        <span class="range-val" id="adv-budget-val">80.0</span>
+      </div>
+      <span class="text-muted" style="font-size: 0.72rem;">Spend in Thousands of Dollars ($k)</span>
+    </div>
+  </div>
+
+  <!-- Side panel metrics -->
+  <div class="d-flex flex-column gap-3">
+    <!-- Live Prediction output -->
+    <div class="card ca-teal fade-up delay-2">
+      <h4 class="card-title" style="color: var(--teal);">Live Sales Projection</h4>
+      
+      <div class="py-4 text-center">
+        <span class="text-muted" style="font-size: 0.85rem; display: block; margin-bottom: 0.25rem;">Predicted revenue</span>
+        <span id="predicted-sales" style="font-size: 2.5rem; font-weight: 900; font-family: 'Outfit'; color: var(--teal);">$0.00k</span>
+      </div>
+
+      <div class="divider"></div>
+      
+      <div class="alert-box tip" style="margin-bottom: 0; padding: 0.75rem;">
+        <div class="alert-content" style="font-size: 0.75rem; line-height: 1.45;">
+          <strong>Interpretation:</strong> A positive coefficient indicates every thousand dollars spent yields a linear sales increase.
+        </div>
+      </div>
+    </div>
+
+    <!-- Parameters card -->
+    <div class="card ca-indigo fade-up delay-3">
+      <h4 class="card-title" style="color: var(--indigo);">Calculated Parameters</h4>
+
+      <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+        <span class="text-muted" style="font-size: 0.8rem;">Determination ($R^2$):</span>
+        <strong style="font-size: 0.82rem; color: var(--text-h);">{{ (metrics.r2 * 100)|round(2) }}%</strong>
+      </div>
+      <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+        <span class="text-muted" style="font-size: 0.8rem;">MSE (Mean Squared Error):</span>
+        <strong style="font-size: 0.82rem; color: var(--text-h);">{{ metrics.mse|round(4) }}</strong>
+      </div>
+      <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+        <span class="text-muted" style="font-size: 0.8rem;">Intercept ($\beta_0$):</span>
+        <strong style="font-size: 0.82rem; color: var(--text-h);">{{ metrics.intercept|round(4) }}</strong>
+      </div>
+      <div class="d-flex justify-content-between mb-2">
+        <span class="text-muted" style="font-size: 0.8rem;">Slope ($\beta_1$):</span>
+        <strong style="font-size: 0.82rem; color: var(--text-h);">{{ metrics.slope|round(4) }}</strong>
+      </div>
+
+      <div class="mt-4 p-3 bg-light rounded text-center border">
+        <span class="text-muted d-block mb-1" style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;">Model Equation:</span>
+        <code id="formula-repr" style="font-size: 0.78rem; font-weight: 700; color: var(--indigo); font-family: 'JetBrains Mono', monospace;">Sales = B0 + B1 * Advertising</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Source script walkthrough -->
+<div class="card mt-4 fade-up delay-4">
+  <h3 class="card-title">Mathematical Formula &amp; Pipeline Code</h3>
+  
+  <div class="alert-box note">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"/>
+    </svg>
+    <div>
+      <div class="alert-title">Least-Squares Regression Equation</div>
+      <div class="alert-content" style="font-size: 0.82rem;">
+        The equation is: <strong>y = &beta;<sub>0</sub> + &beta;<sub>1</sub>x + &epsilon;</strong>, where:
+        <ul class="pl-3 mt-1">
+          <li><strong>y</strong>: Forecasted sales revenue target (Dependent variable).</li>
+          <li><strong>x</strong>: Advertising budget investment (Independent predictor).</li>
+          <li><strong>&beta;<sub>0</sub></strong>: Y-intercept value (Base sales projection at zero ad spend).</li>
+          <li><strong>&beta;<sub>1</sub></strong>: Slope coefficient (Proportional return parameter).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-viewer-container mt-4">
+    <div class="code-tabs">
+      <button class="code-tab active" data-target="code-reg-train">1. Scikit-Learn Model Training</button>
+      <button class="code-tab" data-target="code-reg-eval">2. Metrics Extraction</button>
+    </div>
+    
+    <div class="code-content active" id="code-reg-train"># Simple Linear Regression Implementation using Scikit-Learn
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+import joblib
+
+# Load Sales vs Advertising dataset
+df = pd.read_csv('datasets/sales_advertising.csv')
+
+X = df[['Advertising']] # Reshaped as 2D array
+y = df['Sales']
+
+# Split dataset into training and testing sets (80/20)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train the Simple Linear Regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Save the trained model
+joblib.dump(model, 'model/sales_reg.pkl')</div>
+    
+    <div class="code-content" id="code-reg-eval"># Retrieve Regression Coefficients and Evaluate Fit Quality
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Make predictions on test set
+y_pred = model.predict(X_test)
+
+# Model coefficients
+slope = model.coef_[0]
+intercept = model.intercept_
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f"Regression Fit Formula: Sales = {intercept:.4f} + {slope:.4f} * Advertising")
+print(f"Coefficient of Determination (R² Score): {r2 * 100:.2f}%")
+print(f"Mean Squared Error (MSE): {mse:.4f}")</div>
+  </div>
+</div>
+{% endblock %}

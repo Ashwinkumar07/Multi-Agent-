@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Edufi AI/ML Portal{% endblock %}</title>
+  <meta name="description" content="Universal Machine Learning & Cybersecurity Web Portal — Edufi Academic Project">
+
+  <!-- Local vendor CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/css/bootstrap.min.css') }}">
+  <!-- Custom Pro Max Design System -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <!-- Chart.js (local) -->
+  <script src="{{ url_for('static', filename='vendor/js/chart.min.js') }}"></script>
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+<div class="app-container">
+
+  <!-- ══════════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════════ -->
+  <aside class="sidebar">
+
+    <!-- Brand -->
+    <div class="brand-section">
+      <div class="brand-logo">μL</div>
+      <div class="brand-info">
+        <span class="brand-name">Edufi Portal</span>
+        <span class="brand-tagline">AI/ML &amp; Cybersecurity</span>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <ul class="nav-menu">
+
+      <li class="nav-section-label">Overview</li>
+
+      <li class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+        <a href="/">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+          <span>Dashboard Hub</span>
+          <span class="nav-dot indigo"></span>
+        </a>
+      </li>
+
+      <li class="nav-section-label">AIML Tasks</li>
+
+      <li class="nav-item {% if active_page == 'diabetes' %}active{% endif %}">
+        <a href="/diabetes">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span>Diabetes Predictor</span>
+          <span class="nav-dot teal"></span>
+        </a>
+      </li>
+
+      <li class="nav-item {% if active_page == 'regression' %}active{% endif %}">
+        <a href="/linear_regression">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <span>Sales Regression</span>
+          <span class="nav-dot sky"></span>
+        </a>
+      </li>
+
+      <li class="nav-item {% if active_page == 'preprocessing' %}active{% endif %}">
+        <a href="/titanic_preprocessing">
+          <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          <span>Data Preprocessing</span>
+          <span class="nav-dot amber"></span>
+        </a>
+      </li>
+
+      <li class="nav-item {% if active_page == 'supervised' %}active{% endif %}">
+        <a href="/titanic_supervised">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><path d="M11 18H8a2 2 0 0 1-2-2V9"/></svg>
+          <span>Supervised ML</span>
+          <span class="nav-dot violet"></span>
+        </a>
+      </li>
+
+      <li class="nav-item {% if active_page == 'unsupervised' %}active{% endif %}">
+        <a href="/titanic_unsupervised">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><circle cx="12" cy="12" r="10"/></svg>
+          <span>PCA / K-Means</span>
+          <span class="nav-dot emerald"></span>
+        </a>
+      </li>
+
+      <li class="nav-section-label">Major Project</li>
+
+      <li class="nav-item {% if active_page == 'anomaly' %}active{% endif %}">
+        <a href="/anomaly_detection">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><circle cx="12" cy="16" r=".5" fill="currentColor"/></svg>
+          <span>DDoS Threat Center</span>
+          <span class="nav-dot rose"></span>
+        </a>
+      </li>
+
+    </ul>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <div class="user-profile" onclick="location.href='/logout'" title="Click to Sign Out" style="cursor: pointer;">
+        <div class="user-avatar">{{ (username or 'U')[0:2] | upper }}</div>
+        <div class="user-info">
+          <span class="user-name">{{ username | capitalize }}</span>
+          <span class="user-role" style="{% if role == 'admin' %}color:#818cf8{% elif role == 'analyst' %}color:#34d399{% else %}color:#fbbf24{% endif %}">
+            {% if role == 'admin' %}⚡ Admin{% elif role == 'analyst' %}🔬 Analyst{% else %}👁 Viewer{% endif %}
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══════════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════════ -->
+  <main class="main-wrapper">
+
+    <!-- Header -->
+    <header class="main-header">
+      <div class="header-left">
+        <div class="header-title">
+          <h2>{% block header_title %}Edufi ML Portal{% endblock %}</h2>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="header-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <span id="header-date">Today</span>
+        </div>
+        <div class="header-chip">
+          <div class="status-dot"></div>
+          <span>System Online</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="flash-{{ category }}">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </div>
+
+  </main>
+</div>
+
+<!-- Scripts (local) -->
+<script src="{{ url_for('static', filename='vendor/js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/js/popper.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+<script>
+  // Dynamic date
+  const d = new Date();
+  document.getElementById('header-date').textContent = d.toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
+
+  // Range slider gradient fill
+  document.querySelectorAll('.range-input').forEach(r => {
+    function updateFill() {
+      const pct = ((r.value - r.min) / (r.max - r.min)) * 100;
+      r.style.background = `linear-gradient(90deg, var(--indigo) ${pct}%, var(--border) ${pct}%)`;
+    }
+    r.addEventListener('input', updateFill);
+    updateFill();
+  });
+
+  // FadeUp animation on page load
+  document.querySelectorAll('.fade-up').forEach((el, i) => {
+    el.style.animationDelay = `${i * 0.07}s`;
+  });
+</script>
+
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

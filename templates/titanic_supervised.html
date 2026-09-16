@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Supervised Comparison | Edufi AI/ML Portal{% endblock %}
+{% block header_title %}Titanic Survival Classifiers{% endblock %}
+
+{% block content %}
+<div class="fade-up">
+  <div class="section-title">Classifier Metrics comparison</div>
+  <p class="section-sub">
+    Compare the accuracy, precision, and decision boundaries of a hierarchical Decision Tree against a Linear Probability Model (LPM).
+  </p>
+</div>
+
+<div class="grid-main-side">
+  <!-- Chart Card -->
+  <div class="card ca-violet fade-up delay-1">
+    <h3 class="card-title" style="color: var(--violet);">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.25rem;"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><path d="M11 18H8a2 2 0 0 1-2-2V9"/></svg>
+      Model performance comparator
+    </h3>
+    <p class="text-muted mb-4" style="font-size: 0.85rem;">
+      Both models evaluate passenger parameters (Age, Fare, Gender, Pclass, Family size) to estimate binary survival outputs.
+    </p>
+
+    <!-- Canvas -->
+    <div style="height: 300px; position: relative;" class="mb-4">
+      <canvas id="titanic-supervised-chart" 
+              data-dt-acc="{{ metrics.decision_tree.accuracy }}"
+              data-lr-acc="{{ metrics.linear_regression.accuracy }}"
+              data-dt-f1="{{ metrics.decision_tree.f1 }}"
+              data-lr-f1="{{ metrics.linear_regression.f1 }}"></canvas>
+    </div>
+
+    <!-- Comparative details -->
+    <div class="row pt-4 border-top">
+      <div class="col-md-6 mb-3 mb-md-0">
+        <h5 class="mb-3 font-weight-bold" style="color: var(--indigo); font-size: 0.9rem;">Decision Tree classifier</h5>
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted" style="font-size: 0.8rem;">Accuracy Score:</span>
+          <strong style="font-size: 0.82rem;">{{ (metrics.decision_tree.accuracy * 100)|round(1) }}%</strong>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted" style="font-size: 0.8rem;">Precision Rate:</span>
+          <strong style="font-size: 0.82rem;">{{ (metrics.decision_tree.precision * 100)|round(1) }}%</strong>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted" style="font-size: 0.8rem;">Recall Rate:</span>
+          <strong style="font-size: 0.82rem;">{{ (metrics.decision_tree.recall * 100)|round(1) }}%</strong>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span class="text-muted" style="font-size: 0.8rem;">F1 Score:</span>
+          <strong style="font-size: 0.82rem;">{{ (metrics.decision_tree.f1 * 100)|round(1) }}%</strong>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <h5 class="mb-3 font-weight-bold" style="color: var(--teal); font-size: 0.9rem;">Linear Probability model</h5>
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted" style="font-size: 0.8rem;">Accuracy Score:</span>
+          <strong style="font-size: 0.82rem;">{{ (metrics.linear_regression.accuracy * 100)|round(1) }}%</strong>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted" style="font-size: 0.8rem;">Precision Rate:</span>
+          <strong style="font-size: 0.82rem;">{{ (metrics.linear_regression.precision * 100)|round(1) }}%</strong>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted" style="font-size: 0.8rem;">Recall Rate:</span>
+          <strong style="font-size: 0.82rem;">{{ (metrics.linear_regression.recall * 100)|round(1) }}%</strong>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span class="text-muted" style="font-size: 0.8rem;">F1 Score:</span>
+          <strong style="font-size: 0.82rem;">{{ (metrics.linear_regression.f1 * 100)|round(1) }}%</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Side Panel -->
+  <div class="d-flex flex-column gap-3">
+    <!-- Importance Card -->
+    <div class="card ca-indigo fade-up delay-2">
+      <h4 class="card-title" style="color: var(--indigo);">Gini Feature Importances</h4>
+      <p class="text-muted" style="font-size: 0.78rem;">
+        Splitting priorities calculated from Gini impurity reductions in the trained Decision Tree.
+      </p>
+
+      <div class="d-flex flex-column gap-3 mt-3">
+        {% for feat in metrics.feature_importance[:5] %}
+        <div>
+          <div class="d-flex justify-content-between mb-1" style="font-size: 0.78rem; font-weight: 600;">
+            <span>{{ feat.feature }}</span>
+            <span style="color: var(--indigo);">{{ (feat.importance * 100)|round(1) }}%</span>
+          </div>
+          <div style="background-color: var(--border-l); height: 8px; border-radius: 4px; overflow: hidden;">
+            <div style="background-color: var(--indigo); height: 100%; width: {{ feat.importance * 100 }}%; border-radius: 4px;"></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Confusion Matrix Card -->
+    <div class="card ca-teal fade-up delay-3">
+      <h4 class="card-title" style="color: var(--teal);">Confusion Matrices</h4>
+      
+      <div style="font-size: 0.78rem; line-height: 1.5;">
+        <div class="mb-3">
+          <strong class="d-block mb-1" style="color: var(--indigo);">Decision Tree matrix:</strong>
+          <pre style="font-size: 0.72rem; background: var(--bg-app); padding: 8px; border-radius: var(--r-sm); border: 1px solid var(--border); font-family: 'JetBrains Mono', monospace;">
+Perished [{{ metrics.decision_tree.confusion_matrix[0][0] }} | {{ metrics.decision_tree.confusion_matrix[0][1] }}]
+Survived [{{ metrics.decision_tree.confusion_matrix[1][0] }} | {{ metrics.decision_tree.confusion_matrix[1][1] }}]</pre>
+        </div>
+        <div>
+          <strong class="d-block mb-1" style="color: var(--teal);">Linear Probability matrix:</strong>
+          <pre style="font-size: 0.72rem; background: var(--bg-app); padding: 8px; border-radius: var(--r-sm); border: 1px solid var(--border); font-family: 'JetBrains Mono', monospace;">
+Perished [{{ metrics.linear_regression.confusion_matrix[0][0] }} | {{ metrics.linear_regression.confusion_matrix[0][1] }}]
+Survived [{{ metrics.linear_regression.confusion_matrix[1][0] }} | {{ metrics.linear_regression.confusion_matrix[1][1] }}]</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Source script walkthrough -->
+<div class="card mt-4 fade-up delay-4">
+  <h3 class="card-title">Model Architecture &amp; Script Logic</h3>
+  <p class="text-muted" style="font-size: 0.85rem;">
+    A Linear Probability Model fits Ordinary Least Squares against a $\{0,1\}$ binary target. Decision Trees apply hierarchical partitioning splits to isolate classes.
+  </p>
+
+  <div class="code-viewer-container mt-3">
+    <div class="code-tabs">
+      <button class="code-tab active" data-target="code-titanic-dt">1. Decision Tree Training</button>
+      <button class="code-tab" data-target="code-titanic-lr">2. Linear Probability Model (LPM)</button>
+    </div>
+    
+    <div class="code-content active" id="code-titanic-dt"># Train Decision Tree Classifier on Titanic
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.preprocessing import MinMaxScaler
+import joblib
+
+# Split features X and target y
+X_train_scaled = MinMaxScaler().fit_transform(X_train)
+
+# Fit classifier
+dt_model = DecisionTreeClassifier(max_depth=4, random_state=42)
+dt_model.fit(X_train_scaled, y_train)
+
+# Extrapolate Gini Feature Importances
+importances = dt_model.feature_importances_
+print("Gini Importances computed successfully.")</div>
+    
+    <div class="code-content" id="code-titanic-lr"># Train Linear Regression for Binary Prediction (LPM)
+from sklearn.linear_model import LinearRegression
+import numpy as np
+
+# Fit regression
+lr_model = LinearRegression()
+lr_model.fit(X_train_scaled, y_train)
+
+# Predict raw probability metrics
+y_pred_raw = lr_model.predict(X_test_scaled)
+
+# Apply decision boundary threshold at 0.5
+y_pred = (y_pred_raw >= 0.5).astype(int)</div>
+  </div>
+</div>
+{% endblock %}

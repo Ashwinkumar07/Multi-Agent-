@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}PCA &amp; K-Means | Edufi AI/ML Portal{% endblock %}
+{% block header_title %}Unsupervised Clustering Lab{% endblock %}
+
+{% block content %}
+<div class="fade-up">
+  <div class="section-title">Principal Component Analysis &amp; K-Means</div>
+  <p class="section-sub">
+    Reduce features onto a 2D projection space using PCA and partition records into clusters using K-Means.
+  </p>
+</div>
+
+<div class="grid-main-side">
+  <!-- Interactive PCA Canvas Card -->
+  <div class="card ca-emerald fade-up delay-1">
+    <h3 class="card-title" style="color: var(--emerald);">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.25rem;"><circle cx="12" cy="12" r="2"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><circle cx="12" cy="12" r="10"/></svg>
+      Principal Component Projection
+    </h3>
+    <p class="text-muted mb-4" style="font-size: 0.85rem;">
+      Toggle color palettes to view algorithm-defined cluster divisions alongside actual survival labels.
+    </p>
+
+    <!-- Canvas -->
+    <div style="height: 380px; position: relative;" class="mb-4">
+      <canvas id="titanic-pca-chart"></canvas>
+    </div>
+
+    <!-- Controls -->
+    <div class="row pt-4 border-top">
+      <div class="col-md-6 form-group">
+        <label for="unsupervised-clusters">Number of Clusters ($K$)</label>
+        <div class="range-slider">
+          <input type="range" class="range-input" id="unsupervised-clusters" min="2" max="6" value="3">
+          <span class="range-val" id="cluster-count-label">3</span>
+        </div>
+      </div>
+
+      <div class="col-md-6 form-group">
+        <label for="color-scheme-select">Overlay Coordinate Scheme</label>
+        <select id="color-scheme-select" class="form-control">
+          <option value="cluster" selected>K-Means Cluster Classifications</option>
+          <option value="survival">Passenger Survival Output (0 or 1)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Side Panel -->
+  <div class="d-flex flex-column gap-3">
+    <!-- Cluster Profile Card -->
+    <div class="card ca-amber fade-up delay-2">
+      <h4 class="card-title" style="color: var(--amber);">Cluster Profile Analysis</h4>
+      <p class="text-muted" style="font-size: 0.78rem;">
+        Aggregated demographics for the selected $K$-Means partition mapping passenger traits.
+      </p>
+
+      <div class="table-container mt-2">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Cluster</th>
+              <th>Count</th>
+              <th>Age</th>
+              <th>Fare</th>
+              <th>Surv</th>
+            </tr>
+          </thead>
+          <tbody id="cluster-profile-tbody">
+            <!-- Populated dynamically via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Variance Statistics Card -->
+    <div class="card ca-emerald fade-up delay-3">
+      <h4 class="card-title" style="color: var(--emerald);">PCA Dimension Statistics</h4>
+      <p class="text-muted" style="font-size: 0.78rem;">
+        Compressed variance captured across orthogonal dimensions.
+      </p>
+
+      <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+        <span class="text-muted" style="font-size: 0.8rem;">PC1 Explained Variance:</span>
+        <strong style="font-size: 0.82rem;">{{ (variance[0] * 100)|round(1) }}%</strong>
+      </div>
+      <div class="d-flex justify-content-between mb-2">
+        <span class="text-muted" style="font-size: 0.8rem;">PC2 Explained Variance:</span>
+        <strong style="font-size: 0.82rem;">{{ (variance[1] * 100)|round(1) }}%</strong>
+      </div>
+
+      <div class="mt-3 p-3 bg-light rounded text-center border">
+        <span class="text-muted d-block mb-1" style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase;">Cumulative Explained Info:</span>
+        <strong style="font-size: 1.15rem; color: var(--emerald);">{{ ((variance[0] + variance[1]) * 100)|round(1) }}%</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Source script walkthrough -->
+<div class="card mt-4 fade-up delay-4">
+  <h3 class="card-title">Clustering &amp; Reduction Codebase</h3>
+  <p class="text-muted" style="font-size: 0.85rem;">
+    K-Means partitions observations using squared Euclidean distances. PCA converts correlated columns into linearly uncorrelated dimensions.
+  </p>
+
+  <div class="code-viewer-container mt-3">
+    <div class="code-tabs">
+      <button class="code-tab active" data-target="code-unsupervised-pca">1. PCA Dimensionality Reduction</button>
+      <button class="code-tab" data-target="code-unsupervised-kmeans">2. K-Means Clustering Training</button>
+    </div>
+    
+    <div class="code-content active" id="code-unsupervised-pca"># Apply PCA to reduce dimensions for plotting
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import MinMaxScaler
+import pandas as pd
+
+# Load and preprocess original features
+X = df[['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked', 'FamilySize', 'Title', 'AgeCategory']]
+X_scaled = MinMaxScaler().fit_transform(X)
+
+# Reduce features to 2 principal components
+pca = PCA(n_components=2, random_state=42)
+X_pca = pca.fit_transform(X_scaled)
+
+# View explained variance metrics
+print(f"Explained Variance Ratio: {pca.explained_variance_ratio_}")</div>
+    
+    <div class="code-content" id="code-unsupervised-kmeans"># Apply K-Means Clustering to group data structures
+from sklearn.cluster import KMeans
+
+# Set cluster groupings K
+n_clusters = 3
+
+# Fit K-Means on scaled original features
+kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
+kmeans.fit(X_scaled)
+
+# Assign cluster classifications
+labels = kmeans.labels_
+print(f"Data clustered successfully with K={n_clusters}.")</div>
+  </div>
+</div>
+{% endblock %}

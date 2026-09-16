@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}Diabetes Health Predictor | Edufi AI/ML Portal{% endblock %}
+{% block header_title %}Diabetes Risk Classifier{% endblock %}
+
+{% block content %}
+<div class="fade-up">
+  <div class="section-title">Patient Diagnostic Simulator</div>
+  <p class="section-sub">
+    Adjust physiological metrics to compute diabetes likelihood using Random Forest, Decision Trees, or Logistic Regression.
+  </p>
+</div>
+
+<div class="grid-main-side">
+  <!-- Input Card -->
+  <div class="card ca-teal fade-up delay-1">
+    <h3 class="card-title" style="color: var(--teal);">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.25rem;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Diagnostic Parameters
+    </h3>
+    <p class="text-muted mb-4" style="font-size: 0.85rem;">
+      Modulate these markers according to actual diagnostic readouts. The models run instant predictions client-side using Ajax.
+    </p>
+
+    <form id="diabetes-form">
+      <!-- Model choice -->
+      <div class="form-group mb-4">
+        <label for="model_name">Prediction Model</label>
+        <select name="model_name" id="model_name" class="form-control">
+          <option value="random_forest" selected>Random Forest (Ensemble) - Recommended</option>
+          <option value="decision_tree">Decision Tree (Categorical Splitting)</option>
+          <option value="logistic_regression">Logistic Regression (Sigmoid Bound)</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <!-- Pregnancies -->
+        <div class="col-md-6 form-group">
+          <label for="pregnancies">Pregnancies</label>
+          <div class="range-slider">
+            <input type="range" class="range-input" id="pregnancies" name="pregnancies" min="0" max="17" value="3">
+            <span class="range-val" id="pregnancies-val">3</span>
+          </div>
+        </div>
+
+        <!-- Glucose -->
+        <div class="col-md-6 form-group">
+          <label for="glucose">Glucose (mg/dL)</label>
+          <div class="range-slider">
+            <input type="range" class="range-input" id="glucose" name="glucose" min="40" max="200" value="115">
+            <span class="range-val" id="glucose-val">115</span>
+          </div>
+        </div>
+
+        <!-- BloodPressure -->
+        <div class="col-md-6 form-group">
+          <label for="blood_pressure">Blood Pressure (mm Hg)</label>
+          <div class="range-slider">
+            <input type="range" class="range-input" id="blood_pressure" name="blood_pressure" min="30" max="130" value="72">
+            <span class="range-val" id="blood_pressure-val">72</span>
+          </div>
+        </div>
+
+        <!-- SkinThickness -->
+        <div class="col-md-6 form-group">
+          <label for="skin_thickness">Skin Thickness (mm)</label>
+          <div class="range-slider">
+            <input type="range" class="range-input" id="skin_thickness" name="skin_thickness" min="0" max="99" value="23">
+            <span class="range-val" id="skin_thickness-val">23</span>
+          </div>
+        </div>
+
+        <!-- Insulin -->
+        <div class="col-md-6 form-group">
+          <label for="insulin">Insulin (mu U/ml)</label>
+          <div class="range-slider">
+            <input type="range" class="range-input" id="insulin" name="insulin" min="0" max="846" value="79">
+            <span class="range-val" id="insulin-val">79</span>
+          </div>
+        </div>
+
+        <!-- BMI -->
+        <div class="col-md-6 form-group">
+          <label for="bmi">BMI (Body Mass Index)</label>
+          <div class="range-slider">
+            <input type="range" class="range-input" id="bmi" name="bmi" min="15.0" max="60.0" step="0.1" value="32.0">
+            <span class="range-val" id="bmi-val">32.0</span>
+          </div>
+        </div>
+
+        <!-- DPF -->
+        <div class="col-md-6 form-group">
+          <label for="dpf">Pedigree Function (DPF)</label>
+          <div class="range-slider">
+            <input type="range" class="range-input" id="dpf" name="dpf" min="0.08" max="2.42" step="0.01" value="0.47">
+            <span class="range-val" id="dpf-val">0.47</span>
+          </div>
+        </div>
+
+        <!-- Age -->
+        <div class="col-md-6 form-group">
+          <label for="age">Age (years)</label>
+          <div class="range-slider">
+            <input type="range" class="range-input" id="age" name="age" min="21" max="81" value="33">
+            <span class="range-val" id="age-val">33</span>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-teal btn-block btn-shine mt-4">Run Diagnostic Analysis</button>
+    </form>
+  </div>
+
+  <!-- Side Panel -->
+  <div class="d-flex flex-column gap-3">
+    <!-- Live gauge -->
+    <div class="card ca-indigo fade-up delay-2" id="outcome-card">
+      <h4 class="card-title" style="color: var(--indigo);">Risk Gauge Analysis</h4>
+
+      <div class="gauge-wrapper">
+        <svg class="gauge-svg" viewBox="0 0 100 50">
+          <defs>
+            <linearGradient id="gauge-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="var(--emerald)"></stop>
+              <stop id="gauge-stop2" offset="100%" stop-color="var(--indigo)"></stop>
+            </linearGradient>
+          </defs>
+          <path class="gauge-bg" d="M 15 45 A 35 35 0 0 1 85 45"></path>
+          <path class="gauge-fill" id="gauge-fill-id" d="M 15 45 A 35 35 0 0 1 85 45"></path>
+        </svg>
+        <div class="gauge-label">
+          <div class="gauge-value" id="gauge-val-id">0%</div>
+          <div class="gauge-desc" id="gauge-desc-id">Awaiting input stream...</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="d-flex justify-content-between mb-2">
+        <span class="text-sub font-weight-bold" style="font-size: 0.8rem;">Diagnosis Verdict</span>
+        <span id="outcome-value" class="badge badge-indigo">Awaiting Run</span>
+      </div>
+      <div class="d-flex justify-content-between mb-2">
+        <span class="text-muted" style="font-size: 0.8rem;">Probability (Diabetes)</span>
+        <strong id="prob-yes-val" style="font-size: 0.82rem;">0.0%</strong>
+      </div>
+      <div class="d-flex justify-content-between">
+        <span class="text-muted" style="font-size: 0.8rem;">Probability (Healthy)</span>
+        <strong id="prob-no-val" style="font-size: 0.82rem;">0.0%</strong>
+      </div>
+    </div>
+
+    <!-- Comparative Table -->
+    <div class="card ca-sky fade-up delay-3">
+      <h4 class="card-title" style="color: var(--sky);">Model Performance</h4>
+      <p class="text-muted" style="font-size: 0.78rem;">
+        Comparative stats evaluated over the 20% test subset.
+      </p>
+      
+      <div class="table-container mt-2">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Model Name</th>
+              <th>Accuracy</th>
+              <th>F1 Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Random Forest</strong></td>
+              <td><span class="badge badge-teal">{{ (metrics.random_forest.accuracy * 100)|round(1) }}%</span></td>
+              <td>{{ (metrics.random_forest.f1 * 100)|round(1) }}%</td>
+            </tr>
+            <tr>
+              <td><strong>Decision Tree</strong></td>
+              <td><span class="badge badge-indigo">{{ (metrics.decision_tree.accuracy * 100)|round(1) }}%</span></td>
+              <td>{{ (metrics.decision_tree.f1 * 100)|round(1) }}%</td>
+            </tr>
+            <tr>
+              <td><strong>Logistic Reg</strong></td>
+              <td><span class="badge badge-sky">{{ (metrics.logistic_regression.accuracy * 100)|round(1) }}%</span></td>
+              <td>{{ (metrics.logistic_regression.f1 * 100)|round(1) }}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Code walkthrough -->
+<div class="card mt-4 fade-up delay-4">
+  <h3 class="card-title">Academic Pipeline Viewer</h3>
+  <p class="text-muted" style="font-size: 0.85rem;">
+    Review the source script components used to construct the models:
+  </p>
+
+  <div class="code-viewer-container">
+    <div class="code-tabs">
+      <button class="code-tab active" data-target="code-prep">1. Dataset Load &amp; Train/Test Split</button>
+      <button class="code-tab" data-target="code-train">2. Fit Scaler &amp; Classifiers</button>
+      <button class="code-tab" data-target="code-eval">3. Model Testing Metrics</button>
+    </div>
+    
+    <div class="code-content active" id="code-prep"># Load Pima Indians Diabetes Dataset using Pandas
+import pandas as pd
+from sklearn.model_selection import train_test_split
+
+url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv"
+headers = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age', 'Outcome']
+
+df = pd.read_csv(url, names=headers)
+print("Dataset loaded. Dimensions:", df.shape)
+
+X = df.drop('Outcome', axis=1)
+y = df['Outcome']
+
+# Split the dataset into training and testing sets (80/20)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)</div>
+    
+    <div class="code-content" id="code-train"># Train Supervised Machine Learning Classifiers
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+import joblib
+
+# Features scaling
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Train Random Forest Classifier
+rf_model = RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42)
+rf_model.fit(X_train_scaled, y_train)
+
+# Save the trained model and scaler
+joblib.dump(rf_model, 'model/diabetes_random_forest.pkl')
+joblib.dump(scaler, 'model/diabetes_scaler.pkl')</div>
+    
+    <div class="code-content" id="code-eval"># Evaluate Model Performance Metrics
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+y_pred = rf_model.predict(X_test_scaled)
+
+accuracy = accuracy_score(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+class_report = classification_report(y_test, y_pred)
+
+print(f"Random Forest Accuracy: {accuracy * 100:.2f}%")
+print("Confusion Matrix:\n", conf_matrix)
+print("Classification Report:\n", class_report)</div>
+  </div>
+</div>
+{% endblock %}

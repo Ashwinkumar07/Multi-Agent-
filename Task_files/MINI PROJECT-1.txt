@@ -1,0 +1,9 @@
+MINI PROJECT
+
+Build a diabetes prediction model using a dataset (for example, the Pima Indians Diabetes Dataset), we can use supervised learning algorithms such as Logistic Regression, Decision Trees, or Random Forest. Below is a complete code to build a diabetes prediction model, starting from loading the data to training the model and evaluating its performance.
+
+Steps:
+Data Loading: Load the dataset.
+Data Preprocessing: Clean and prepare the data.
+Model Training: Train a logistic regression model (you can replace it with other models like Decision Trees or Random Forest).
+Model Evaluation: Evaluate the model using accuracy, confusion matrix, and classification report.

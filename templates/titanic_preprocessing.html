@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block title %}Titanic Preprocessing | Edufi AI/ML Portal{% endblock %}
+{% block header_title %}Titanic Data Cleaning Pipeline{% endblock %}
+
+{% block content %}
+<div class="fade-up">
+  <div class="section-title">Data Preprocessing &amp; Engineering Pipeline</div>
+  <p class="section-sub">
+    Click through the sequential pipeline phases below to see how raw Titanic passenger records are cleaned and transformed.
+  </p>
+</div>
+
+<!-- Interactive Progress Timeline -->
+<div class="card ca-indigo fade-up delay-1 mb-4">
+  <div class="pipeline-timeline" id="preprocess-timeline">
+    <div class="pipeline-step active" data-stage="stage0_raw">
+      <div class="step-node">0</div>
+      <div class="step-label">Raw Data Load</div>
+    </div>
+    <div class="pipeline-step" data-stage="stage1_cleaned">
+      <div class="step-node">1</div>
+      <div class="step-label">Missing Values</div>
+    </div>
+    <div class="pipeline-step" data-stage="stage2_engineered">
+      <div class="step-node">2</div>
+      <div class="step-label">Feature Eng.</div>
+    </div>
+    <div class="pipeline-step" data-stage="stage3_encoded">
+      <div class="step-node">3</div>
+      <div class="step-label">Categorical Encoding</div>
+    </div>
+    <div class="pipeline-step" data-stage="stage4_scaled">
+      <div class="step-node">4</div>
+      <div class="step-label">Feature Scaling</div>
+    </div>
+  </div>
+</div>
+
+<!-- STAGE 0 PANEL -->
+<div class="preprocessing-stage-panel fade-up delay-2" id="panel-stage0_raw">
+  <div class="grid-main-side">
+    <div class="card ca-rose">
+      <h3 class="card-title" style="color: var(--rose);">Raw Passenger Stream</h3>
+      <p class="text-muted mb-3" style="font-size: 0.85rem;">
+        The raw dataset is cluttered with missing values, sparse matrices, and textual categories. Models cannot compile this directly.
+      </p>
+      
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              {% for col in stages.stage0_raw.columns[:8] %}
+              <th>{{ col }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in stages.stage0_raw.sample %}
+            <tr>
+              {% for col in stages.stage0_raw.columns[:8] %}
+              <td>{{ row[col] if row[col] is not none else 'NaN' }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <span class="text-muted mt-2 d-block" style="font-size: 0.72rem;">Showing 10 sample records out of {{ stages.stage0_raw.shape[0] }} rows.</span>
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+      <div class="card ca-indigo">
+        <h4 class="card-title" style="color: var(--indigo);">Dataset Dimension</h4>
+        <div class="d-flex justify-content-between mb-2 border-bottom pb-2">
+          <span class="text-muted" style="font-size: 0.8rem;">Total Observations:</span>
+          <strong style="font-size: 0.82rem;">{{ stages.stage0_raw.shape[0] }}</strong>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span class="text-muted" style="font-size: 0.8rem;">Feature Count:</span>
+          <strong style="font-size: 0.82rem;">{{ stages.stage0_raw.shape[1] }}</strong>
+        </div>
+      </div>
+
+      <div class="card ca-amber">
+        <h4 class="card-title" style="color: var(--amber);">Null Value Health</h4>
+        <div class="d-flex flex-column gap-2" style="font-size: 0.78rem;">
+          <div class="d-flex justify-content-between">
+            <span>Age (Numeric):</span>
+            <span class="badge badge-amber">{{ stages.stage0_raw.missing.Age }} missing</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span>Cabin (Sparse):</span>
+            <span class="badge badge-rose">{{ stages.stage0_raw.missing.Cabin }} missing</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span>Embarked (Categorical):</span>
+            <span class="badge badge-amber">{{ stages.stage0_raw.missing.Embarked }} missing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STAGE 1 PANEL -->
+<div class="preprocessing-stage-panel fade-up" id="panel-stage1_cleaned" style="display: none;">
+  <div class="grid-main-side">
+    <div class="card ca-teal">
+      <h3 class="card-title" style="color: var(--teal);">Imputed Missing Values</h3>
+      <p class="text-muted mb-3" style="font-size: 0.85rem;">
+        Missing <code>Age</code> is replaced with median (28.0) to safeguard sample counts. <code>Embarked</code> gets the mode ('S'). <code>Cabin</code> is dropped due to high sparseness.
+      </p>
+
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              {% for col in stages.stage1_cleaned.columns[:8] %}
+              <th>{{ col }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in stages.stage1_cleaned.sample %}
+            <tr>
+              {% for col in stages.stage1_cleaned.columns[:8] %}
+              <td>{{ row[col] if row[col] is not none else 'NaN' }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <span class="text-muted mt-2 d-block" style="font-size: 0.72rem;">Cabin column has been successfully eliminated.</span>
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+      <div class="card ca-teal">
+        <h4 class="card-title" style="color: var(--teal);">Post-Imputation Stats</h4>
+        <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+          <span class="text-muted" style="font-size: 0.8rem;">Cleaned Attributes:</span>
+          <strong style="font-size: 0.82rem;">{{ stages.stage1_cleaned.shape[1] }}</strong>
+        </div>
+
+        <h5 class="mt-2 mb-2" style="font-size: 0.8rem; font-weight: 700;">Remaining Nulls:</h5>
+        <div class="d-flex flex-column gap-2" style="font-size: 0.78rem;">
+          {% for col, missing in stages.stage1_cleaned.missing.items() %}
+          {% if missing > 0 or col == 'Age' or col == 'Embarked' %}
+          <div class="d-flex justify-content-between">
+            <span>{{ col }}:</span>
+            <span class="badge {% if missing == 0 %}badge-emerald{% else %}badge-amber{% endif %}">{{ missing }} nulls</span>
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STAGE 2 PANEL -->
+<div class="preprocessing-stage-panel fade-up" id="panel-stage2_engineered" style="display: none;">
+  <div class="grid-main-side">
+    <div class="card ca-sky">
+      <h3 class="card-title" style="color: var(--sky);">Synthesized Features</h3>
+      <p class="text-muted mb-3" style="font-size: 0.85rem;">
+        1. <strong>Title:</strong> Extracted titles (Mr, Mrs, Miss) from raw Name strings. 2. <strong>FamilySize:</strong> Mapped SibSp + Parch + 1. 3. <strong>AgeCategory:</strong> Discrete bins (Child, Teen, YoungAdult).
+      </p>
+
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Pclass</th>
+              <th>Sex</th>
+              <th>Age</th>
+              <th>Fare</th>
+              <th>FamilySize</th>
+              <th>Title</th>
+              <th>AgeCategory</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in stages.stage2_engineered.sample %}
+            <tr>
+              <td>{{ row.Pclass }}</td>
+              <td>{{ row.Sex }}</td>
+              <td>{{ row.Age }}</td>
+              <td>{{ row.Fare }}</td>
+              <td><strong style="color: var(--indigo);">{{ row.FamilySize }}</strong></td>
+              <td><span class="badge badge-sky">{{ row.Title }}</span></td>
+              <td><span class="badge badge-indigo">{{ row.AgeCategory }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+      <div class="card ca-violet">
+        <h4 class="card-title" style="color: var(--violet);">Features Synthesized</h4>
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted" style="font-size: 0.8rem;">Feature Count:</span>
+          <strong>{{ stages.stage2_engineered.shape[1] }}</strong>
+        </div>
+        <div class="divider"></div>
+        <p class="text-muted" style="font-size: 0.75rem; line-height: 1.45;">
+          Title extractions have highly predictive correlations to survival rates owing to historic maritime rescue protocols.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STAGE 3 PANEL -->
+<div class="preprocessing-stage-panel fade-up" id="panel-stage3_encoded" style="display: none;">
+  <div class="grid-main-side">
+    <div class="card ca-violet">
+      <h3 class="card-title" style="color: var(--violet);">Categorical Label Encoding</h3>
+      <p class="text-muted mb-3" style="font-size: 0.85rem;">
+        Non-numeric categories are converted into machine-readable integer mappings. Raw identifiers (Name, PassengerId, Ticket) are dropped.
+      </p>
+
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              {% for col in stages.stage3_encoded.columns[:8] %}
+              <th>{{ col }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in stages.stage3_encoded.sample %}
+            <tr>
+              {% for col in stages.stage3_encoded.columns[:8] %}
+              <td>{{ row[col] }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+      <div class="card ca-indigo">
+        <h4 class="card-title" style="color: var(--indigo);">Encoding Blueprint</h4>
+        <div class="alert-box tip" style="padding: 0.75rem; margin-bottom: 0;">
+          <div class="alert-content" style="font-size: 0.75rem; line-height: 1.5;">
+            <ul class="pl-2 mb-0">
+              <li><strong>Sex:</strong> female &rarr; 0, male &rarr; 1</li>
+              <li><strong>Embarked:</strong> C &rarr; 0, Q &rarr; 1, S &rarr; 2</li>
+              <li><strong>Title:</strong> Master &rarr; 0, Miss &rarr; 1, Mr &rarr; 2, Mrs &rarr; 3, Rare &rarr; 4</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STAGE 4 PANEL -->
+<div class="preprocessing-stage-panel fade-up" id="panel-stage4_scaled" style="display: none;">
+  <div class="grid-main-side">
+    <div class="card ca-emerald">
+      <h3 class="card-title" style="color: var(--emerald);">MinMax Feature Scaling</h3>
+      <p class="text-muted mb-3" style="font-size: 0.85rem;">
+        All variables are mapped between 0.0 and 1.0 using MinMaxScaler. This prevents raw values (like Fare) from dominating the optimizations.
+      </p>
+
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              {% for col in stages.stage4_scaled.columns[:8] %}
+              <th>{{ col }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in stages.stage4_scaled.sample %}
+            <tr>
+              {% for col in stages.stage4_scaled.columns[:8] %}
+              <td>{{ row[col]|round(4) if row[col] is number else row[col] }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <span class="text-muted mt-2 d-block" style="font-size: 0.72rem;">The matrix is now perfectly aligned and model-ready!</span>
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+      <div class="card ca-emerald">
+        <h4 class="card-title" style="color: var(--emerald);">Scaling Advantage</h4>
+        <p class="text-muted" style="font-size: 0.75rem; line-height: 1.45;">
+          Compressed arrays maintain exact ratio structures while ensuring rapid optimizer convergence on linear classifiers.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

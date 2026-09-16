@@ -1,0 +1,13 @@
+TASK 1
+
+Build a Simple Linear Regression model to study the linear relationship between Sales and Advertising dataset for a dietary weight control product. I discuss the basics of linear regression and its implementation in Python programming language using Scikit-learn. Scikit-learn is the popular machine learning library of Python programming language.
+
+Implementation in Python Using Scikit-Learn
+
+
+Import required libraries.
+Load and explore the dataset.
+Split the dataset into training and testing sets.
+Train the model.
+Make predictions.
+Evaluate the model.

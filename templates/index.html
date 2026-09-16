@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Hub | Edufi AI/ML Portal{% endblock %}
+{% block header_title %}Workspace Control Hub{% endblock %}
+
+{% block content %}
+<div class="fade-up">
+  <!-- Portal Hero Banner -->
+  <div class="portal-hero mb-4">
+    <div class="hero-pill">
+      <div class="hero-pill-dot"></div>
+      <span>All Systems Operational</span>
+    </div>
+    <h1>Universal Machine Learning &amp; Security Portal</h1>
+    <p>
+      An advanced interactive suite integrating five specialized data science workspaces and an enterprise DDoS Intrusion Prevention engine. Explore the interactive controls, view real-time computations, and download segmented traffic captures.
+    </p>
+    
+    <div class="hero-stats">
+      <div class="hero-stat-item">
+        <span class="hero-stat-val">5 Tasks</span>
+        <span class="hero-stat-key">AI/ML Models</span>
+      </div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-val">1 Major</span>
+        <span class="hero-stat-key">Ensemble Project</span>
+      </div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-val">100%</span>
+        <span class="hero-stat-key">Offline Capable</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Statistics Row -->
+<div class="grid-3 mb-4">
+  <div class="stat-card ca-indigo fade-up delay-1">
+    <div class="stat-icon si-indigo">
+      <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+    </div>
+    <div class="stat-info">
+      <span class="stat-value">6 Active</span>
+      <span class="stat-label">Project Modules</span>
+    </div>
+  </div>
+
+  <div class="stat-card ca-teal fade-up delay-2">
+    <div class="stat-icon si-teal">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </div>
+    <div class="stat-info">
+      <span class="stat-value">99.8%</span>
+      <span class="stat-label">Security Precision</span>
+    </div>
+  </div>
+
+  <div class="stat-card ca-amber fade-up delay-3">
+    <div class="stat-icon si-amber">
+      <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+    </div>
+    <div class="stat-info">
+      <span class="stat-value">Localhost</span>
+      <span class="stat-label">Secure Sandbox</span>
+    </div>
+  </div>
+</div>
+
+<!-- Grid of Projects -->
+<h3 class="section-title fade-up delay-4">Explore Interactive Classrooms &amp; Labs</h3>
+<p class="section-sub fade-up delay-4">Launch any of the sandbox applications to interface with models using custom ranges, tabs, uploads, and dynamic visualizations.</p>
+
+<div class="project-hub-grid">
+  <!-- Task 1: Diabetes Prediction -->
+  <div class="hub-card fade-up delay-5" onclick="location.href='/diabetes'">
+    <div class="hub-card-banner hcb-teal"></div>
+    <div class="hub-card-inner">
+      <div class="hub-card-head">
+        <div class="hub-card-icon hci-teal">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="hub-card-meta">
+          <div class="hub-type" style="color: var(--teal);">Task 1</div>
+          <h4 class="hub-title">Diabetes Predictor</h4>
+        </div>
+      </div>
+      <p class="hub-desc">
+        Evaluate health metrics (BMI, Glucose, Age, insulin) against three supervised algorithms. Features real-time SVG risk gauges and dynamic probability scores.
+      </p>
+      <div class="hub-card-footer">
+        <span class="badge badge-teal">Classification</span>
+        <span class="btn btn-ghost btn-sm">Launch Space</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task 2: Sales Linear Regression -->
+  <div class="hub-card fade-up delay-5" onclick="location.href='/linear_regression'">
+    <div class="hub-card-banner hcb-sky"></div>
+    <div class="hub-card-inner">
+      <div class="hub-card-head">
+        <div class="hub-card-icon hci-sky">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="hub-card-meta">
+          <div class="hub-type" style="color: var(--sky);">Task 2</div>
+          <h4 class="hub-title">Advertising Regression</h4>
+        </div>
+      </div>
+      <p class="hub-desc">
+        Study linear relationships between Sales and Ad spends. Interface features a sliding budget estimator mapped directly onto Chart.js scatter plots and line fits.
+      </p>
+      <div class="hub-card-footer">
+        <span class="badge badge-sky">Regression</span>
+        <span class="btn btn-ghost btn-sm">Launch Space</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task 3: Titanic Preprocessing -->
+  <div class="hub-card fade-up delay-6" onclick="location.href='/titanic_preprocessing'">
+    <div class="hub-card-banner hcb-amber"></div>
+    <div class="hub-card-inner">
+      <div class="hub-card-head">
+        <div class="hub-card-icon hci-amber">
+          <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="hub-card-meta">
+          <div class="hub-type" style="color: var(--amber);">Task 3</div>
+          <h4 class="hub-title">Titanic Preprocessing</h4>
+        </div>
+      </div>
+      <p class="hub-desc">
+        Examine step-by-step cleaning of raw Titanic passenger rows. Toggle through missing value imputers, feature extractions, encoders, and scalers.
+      </p>
+      <div class="hub-card-footer">
+        <span class="badge badge-amber">Data Clean</span>
+        <span class="btn btn-ghost btn-sm">Launch Space</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task 4: Titanic Supervised Comparison -->
+  <div class="hub-card fade-up delay-6" onclick="location.href='/titanic_supervised'">
+    <div class="hub-card-banner hcb-violet"></div>
+    <div class="hub-card-inner">
+      <div class="hub-card-head">
+        <div class="hub-card-icon hci-violet">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><path d="M11 18H8a2 2 0 0 1-2-2V9"/></svg>
+        </div>
+        <div class="hub-card-meta">
+          <div class="hub-type" style="color: var(--violet);">Task 4</div>
+          <h4 class="hub-title">Survival Supervised</h4>
+        </div>
+      </div>
+      <p class="hub-desc">
+        Compare Decision Tree Classifiers and Linear Probability Models side-by-side. Inspect detailed confusion matrices, precision, recall, and feature scores.
+      </p>
+      <div class="hub-card-footer">
+        <span class="badge badge-violet">Supervised</span>
+        <span class="btn btn-ghost btn-sm">Launch Space</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task 5: Titanic Unsupervised PCA & K-Means -->
+  <div class="hub-card fade-up delay-6" onclick="location.href='/titanic_unsupervised'">
+    <div class="hub-card-banner hcb-emerald"></div>
+    <div class="hub-card-inner">
+      <div class="hub-card-head">
+        <div class="hub-card-icon hci-emerald">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><circle cx="12" cy="12" r="10"/></svg>
+        </div>
+        <div class="hub-card-meta">
+          <div class="hub-type" style="color: var(--emerald);">Task 5</div>
+          <h4 class="hub-title">PCA &amp; K-Means</h4>
+        </div>
+      </div>
+      <p class="hub-desc">
+        Project Titanic features onto a 2D PCA space. Interactively select K values to recalculate clusters, plot centroids, and update demographic summaries.
+      </p>
+      <div class="hub-card-footer">
+        <span class="badge badge-emerald">Unsupervised</span>
+        <span class="btn btn-ghost btn-sm">Launch Space</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Major Project: DDoS Anomaly Detection -->
+  <div class="hub-card fade-up delay-6" onclick="location.href='/anomaly_detection'">
+    <div class="hub-card-banner hcb-rose"></div>
+    <div class="hub-card-inner">
+      <div class="hub-card-head">
+        <div class="hub-card-icon hci-rose">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><circle cx="12" cy="16" r=".5" fill="currentColor"/></svg>
+        </div>
+        <div class="hub-card-meta">
+          <div class="hub-type" style="color: var(--rose);">Major Project</div>
+          <h4 class="hub-title">DDoS Threat Center</h4>
+        </div>
+      </div>
+      <p class="hub-desc">
+        High-performance network anomaly scanner powered by pre-trained Random Forest and Support Vector Machine models. Upload logs to isolate network hazards.
+      </p>
+      <div class="hub-card-footer">
+        <span class="badge badge-rose">Cybersecurity</span>
+        <span class="btn btn-primary btn-sm btn-shine">Open Hub</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

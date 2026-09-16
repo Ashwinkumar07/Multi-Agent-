@@ -1,0 +1,10 @@
+TASK 4
+
+Apply an unsupervised machine learning model on the Titanic dataset, we can explore techniques like Clustering and Dimensionality Reduction. Specifically, we will use K-means clustering (a popular unsupervised learning algorithm) and Principal Component Analysis (PCA) to reduce the dataset’s dimensions.
+
+Steps:
+
+
+Data Preprocessing: Clean and prepare the dataset as done earlier.
+Clustering: Use K-means to find clusters in the data.
+Dimensionality Reduction: Apply PCA to reduce the dimensionality of the data for visualization.

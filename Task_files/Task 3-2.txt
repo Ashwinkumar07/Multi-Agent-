@@ -1,0 +1,8 @@
+Task 3
+
+Apply supervised learning models like Linear Regression and Decision Tree on the Titanic dataset after performing data cleaning and feature engineering
+
+
+Data Preprocessing: Use the cleaned and feature-engineered dataset.
+Model Training: Train both a Linear Regression model and a Decision Tree model on the training data.
+Model Evaluation: Evaluate both models using metrics like Mean Squared Error (MSE), R² score for regression tasks, and accuracy for classification tasks.

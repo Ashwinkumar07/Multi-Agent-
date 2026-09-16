@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Analyst Upload | Edufi Portal{% endblock %}
+{% block header_title %}Analyst Workspace{% endblock %}
+
+{% block content %}
+<div class="fade-up">
+
+  <!-- Role Banner -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;padding:16px 20px;
+              background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);
+              border-radius:14px;">
+    <div style="width:42px;height:42px;background:linear-gradient(135deg,#10b981,#059669);
+                border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+      </svg>
+    </div>
+    <div>
+      <div style="font-weight:700;color:#34d399;font-size:14px;">🔬 Analyst Access</div>
+      <div style="font-size:12px;color:#6b7280;margin-top:2px;">You have access to upload datasets and run anomaly detection analysis.</div>
+    </div>
+    <a href="/logout" style="margin-left:auto;padding:8px 16px;background:rgba(239,68,68,0.1);
+       border:1px solid rgba(239,68,68,0.25);border-radius:8px;color:#fca5a5;font-size:12px;
+       font-weight:600;text-decoration:none;">Sign Out</a>
+  </div>
+
+  <!-- Two Action Cards -->
+  <div class="grid-2 mb-4">
+
+    <!-- DDoS Upload Card -->
+    <div class="hub-card" onclick="location.href='/anomaly_detection'" style="cursor:pointer;">
+      <div class="hub-card-banner hcb-rose"></div>
+      <div class="hub-card-inner">
+        <div class="hub-card-head">
+          <div class="hub-card-icon hci-rose">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><circle cx="12" cy="16" r=".5" fill="currentColor"/></svg>
+          </div>
+          <div class="hub-card-meta">
+            <div class="hub-type" style="color:var(--rose);">Major Project</div>
+            <h4 class="hub-title">DDoS Threat Upload</h4>
+          </div>
+        </div>
+        <p class="hub-desc">Upload a network traffic CSV for real-time anomaly detection. The ensemble model (RF + SVM) will classify packets and isolate threats.</p>
+        <div class="hub-card-footer">
+          <span class="badge badge-rose">Cybersecurity</span>
+          <span class="btn btn-primary btn-sm btn-shine">Upload & Scan</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy Firewall Upload Card -->
+    <div class="hub-card" style="cursor:default;opacity:0.5;">
+      <div class="hub-card-banner" style="background:linear-gradient(90deg,#4f46e5,#7c3aed);"></div>
+      <div class="hub-card-inner">
+        <div class="hub-card-head">
+          <div class="hub-card-icon" style="background:rgba(99,102,241,0.15);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <div class="hub-card-meta">
+            <div class="hub-type" style="color:#818cf8;">Restricted</div>
+            <h4 class="hub-title">Hub Dashboard</h4>
+          </div>
+        </div>
+        <p class="hub-desc">The full ML hub portal is restricted to Admin accounts only. Contact your administrator to request elevated access.</p>
+        <div class="hub-card-footer">
+          <span class="badge" style="background:rgba(99,102,241,0.12);color:#818cf8;">Admin Only</span>
+          <span class="btn btn-ghost btn-sm" style="cursor:not-allowed;">🔒 Locked</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Info Strip -->
+  <div style="padding:14px 20px;background:rgba(30,41,59,0.5);border:1px solid rgba(71,85,105,0.3);
+              border-radius:12px;display:flex;align-items:center;gap:12px;">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+    </svg>
+    <span style="font-size:12px;color:#64748b;">
+      Logged in as <strong style="color:#94a3b8;">{{ username }}</strong> · Role: <strong style="color:#34d399;">Analyst</strong> · 
+      Access: DDoS Threat Upload only
+    </span>
+  </div>
+
+</div>
+{% endblock %}

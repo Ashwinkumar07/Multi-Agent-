@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual Environments (ignore all recursive venvs)
+venv/
+.venv/
+env/
+ENV/
+**/venv/
+**/.venv/
+**/env/
+**/ENV/
+
+# Large Model weights & binaries (>100MB exceeds GitHub push limits)
+*.pt
+*.pth
+*.onnx
+*.bin
+*.h5
+*.ckpt
+
+# Temporary & OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+*.log
