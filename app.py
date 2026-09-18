@@ -13,14 +13,14 @@ from concurrent.futures import ThreadPoolExecutor
 import data_loader
 import ml_engine
 
-app = Flask(__name__)
-app.secret_key = 'edufi_ml_portal_secret_key'
-
 # Absolute paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 MAJOR_PROJECT_DIR = os.path.join(BASE_DIR, 'Task_files', 'major project', 'anomaly_detection')
+
+app = Flask(__name__, template_folder=TEMPLATE_DIR, static_folder=STATIC_DIR)
+app.secret_key = 'edufi_ml_portal_secret_key'
 
 # Load the trained DDoS models from major project folder
 DDOS_MODEL_DIR = os.path.join(MAJOR_PROJECT_DIR, 'model')
